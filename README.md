@@ -1,6 +1,6 @@
 # Pepe The Scraper
 
-Library for scraping memes off Know Your Meme (along with the explanations and background provided for all the memes)
+Library for scraping memes off Know Your Meme and Reddit (along with the explanations and background provided for all the memes)
 
 
 <p align="center">
@@ -24,3 +24,7 @@ from pepethescraper.pepe_at_work import RedditScraper
 scraper = RedditScraper(save_dir_path="memes", save_imgs=False)
 scraper.scrape(search_query="PoliticalMemes",number_of_memes=5)
 ```
+
+### Upcoming Updates:
+
+- Pepe's learning how to scrape memes off Twitter.
