@@ -17,3 +17,10 @@ scraper = KYMScraper(save_dir_path="memes", save_imgs=False)
 scraper.scrape(search_query="political memes",number_of_memes=5)
 ```
 
+- Help Pepe scrape memes off Reddit!
+
+```
+from pepethescraper.pepe_at_work import RedditScraper
+scraper = KYMScraper(save_dir_path="memes", save_imgs=False)
+scraper.scrape(search_query="PoliticalMemes",number_of_memes=5)
+```
