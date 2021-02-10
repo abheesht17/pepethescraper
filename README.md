@@ -28,3 +28,4 @@ scraper.scrape(search_query="PoliticalMemes",number_of_memes=5)
 ### Upcoming Updates:
 
 - Pepe's learning how to scrape memes off Twitter.
+- Pepe will also try to clean the text from KYM.
