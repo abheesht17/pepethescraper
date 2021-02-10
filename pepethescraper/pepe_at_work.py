@@ -5,6 +5,9 @@ import os
 
 from tqdm.auto import tqdm
 import re
+import praw
+import pandas as pd
+
 
 _HEADERS = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}  # defining headers for browser
 
@@ -124,3 +127,59 @@ class KYMScraper(Scraper):
 			meme_file.close()
 
 		file.close()
+
+class RedditScraper(Scraper):
+	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True):
+		self.output_format = output_format
+		self.save_dir_path = save_dir_path
+		self.save_img = save_img
+		self.allowed_image_extensions = ['.jpg', '.jpeg', '.png']
+
+		self.reddit = praw.Reddit(client_id = 'VFB_lJ3i5CTuaw', 
+					client_secret = 't2mGT541Q-xHjszWh11P48NM7nJ25w', 
+					user_agent = 'meme-comment-scraper',
+					check_for_async=False)
+
+	def scrape(self, search_query, number_of_memes=100):
+
+		posts = []
+		sub_reddit = self.reddit.subreddit(search_query)
+		for post in sub_reddit.hot(limit=number_of_memes):
+			try:
+				posts.append([post.title, post.score, post.id, post.subreddit, post.url, post.num_comments, post.selftext, post.created])
+			except:
+				continue
+		posts = pd.DataFrame(posts,columns=['title', 'score', 'id', 'subreddit', 'url', 'num_comments', 'body', 'created'])
+		print(type(posts))
+		if not os.path.exists(self.save_dir_path):
+			os.makedirs(self.save_dir_path)
+
+		if(self.output_format == "csv"):
+			posts.to_csv(os.path.join(self.save_dir_path,"data.csv"), index=False)
+		
+		for index, row in posts.iterrows():
+			
+			url = row['url']
+			post_dir = row['title'] + "_" + row['id']
+			submission = self.reddit.submission(id=row['id'])
+			if not os.path.exists(os.path.join(self.save_dir_path,post_dir)):
+				os.makedirs(os.path.join(self.save_dir_path,post_dir))
+			meme_file = open(os.path.join(self.save_dir_path,post_dir,"meme_data.txt"),"w")
+			
+			_, ext = os.path.splitext(url)
+			
+			if ext in self.allowed_image_extensions:
+				if self.save_img:
+					try:
+						urllib.request.urlretrieve(url, os.path.join(self.save_dir_path,post_dir,'image' + ext))
+					except Exception as e:
+						continue
+				
+				meme_file.write(url + "\n")
+				# extract comments
+				meme_file.write("COMMENTS\n")
+				submission.comments.replace_more(limit=0)
+				for top_level_comment in submission.comments.list():
+					meme_file.write(" ".join(top_level_comment.body.split()))
+					meme_file.write("\n")
+			meme_file.close()
