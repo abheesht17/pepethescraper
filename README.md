@@ -7,3 +7,13 @@ Library for scraping memes off Know Your Meme (along with the explanations and b
   <img width="200" height="200" src="misc/images/pepe_the_frog.jpg">
 </p>
 
+### Examples:
+
+- Help Pepe scrape memes off KYM!
+
+```
+from pepethescraper.pepe_at_work import KYMScraper
+scraper = KYMScraper(save_dir_path="memes", save_imgs=False)
+scraper.scrape(search_query="political memes",number_of_memes=5)
+```
+
