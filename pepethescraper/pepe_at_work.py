@@ -116,7 +116,7 @@ class KYMScraper(Scraper):
 					text_string += " ".join(meme_text[i].text.split()) + "\n"
 				text_string = text_string[:-1]
 				if self.clean_text:
-					text_string = clean_text_fn(text_string)
+					text_string = clean_text(text_string)
 
 
 				file.write(template_name + "," + meme_page_url + "," + " ".join(img_urls))
@@ -164,8 +164,8 @@ class RedditScraper(Scraper):
 
 		if(self.output_format == "csv"):
 			posts.to_csv(os.path.join(self.save_dir_path,"data.csv"), index=False)
-		
-		for index, row in posts.iterrows():
+		print("Crawling " + str(number_of_memes) + " templates...")
+		for index, row in tqdm(posts.iterrows()):
 			
 			url = row['url']
 			post_dir = row['title'] + "_" + row['id']
@@ -190,7 +190,7 @@ class RedditScraper(Scraper):
 				for top_level_comment in submission.comments.list():
 					text = " ".join(top_level_comment.body.split())
 					if self.clean_text:
-						text = clean_text_fn(text)
+						text = clean_text(text)
 					meme_file.write(text)
 					meme_file.write("\n")
 			meme_file.close()
