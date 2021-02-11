@@ -156,7 +156,7 @@ class RedditScraper(Scraper):
 			except:
 				continue
 		posts = pd.DataFrame(posts,columns=['title', 'score', 'id', 'subreddit', 'url', 'num_comments', 'body', 'created'])
-		print(type(posts))
+
 		if not os.path.exists(self.save_dir_path):
 			os.makedirs(self.save_dir_path)
 
