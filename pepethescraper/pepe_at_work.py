@@ -7,6 +7,7 @@ from tqdm.auto import tqdm
 import re
 import praw
 import pandas as pd
+from copy import deepcopy
 
 from pepethescraper.pepe_tools import *
 
@@ -21,8 +22,8 @@ class Scraper:
 		pass
 
 class KYMScraper(Scraper):
-	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True, clean_text=True):
-		assert output_format in ["csv", "none"], "output_format must be one of [\"csv\",\"none\"]" 
+	def __init__(self, output_format="json", save_dir_path="memes", save_img=True, clean_text=True):
+		assert output_format in ["csv", "json", "none"], "output_format must be one of [\"csv\",\"json\",\"none\"]" 
 
 		self.output_format = output_format
 		self.save_dir_path = save_dir_path
@@ -32,15 +33,18 @@ class KYMScraper(Scraper):
 
 	def scrape(self, search_query, number_of_memes=100):
 		search_query = search_query.replace(" ","+")
-		pat = re.compile('<img [^>]*data-src="([^"]+)')
+		pat_url = re.compile('<img [^>]*data-src="([^"]+)')
+		pat_title = re.compile('<img [^>]*data-src="([^"]+)')
 
 		if not os.path.exists(self.save_dir_path):
 			os.makedirs(self.save_dir_path)
 
 		if(self.output_format == "csv"):
 			file = open(os.path.join(self.save_dir_path,'data.csv'),'w')
-			file.write("Name,URL,Image URLs")
+			file.write("template_name,template_url,image_titles,image_urls")
 			file.write("\n")
+		elif(self.output_format == "json"):
+			meme_summary_list = []
 
 		meme_paths = []
 		
@@ -87,16 +91,19 @@ class KYMScraper(Scraper):
 			# extract the image urls
 			try:
 				img_urls = []
+				img_titles = []
 				meme_page_url_with_examples = meme_page_url + "/photos/sort/score"
 				meme_page_with_imgs = requests.get(meme_page_url_with_examples, headers=_HEADERS)
 				meme_imgs_soup = BeautifulSoup(meme_page_with_imgs.content, 'html.parser')
 				meme_imgs = meme_imgs_soup.findAll("div",{"class":"item"})
 
 				for meme_img_ctr, meme_img in enumerate(meme_imgs):
-					img_url = pat.findall(str(meme_img))
+					img_url = pat_url.findall(str(meme_img))
+					img_title = pat_title.findall(str(meme_img))
 					_, ext = os.path.splitext(img_url[0])
 					if ext in self.allowed_image_extensions:
 						img_urls.append(img_url[0])
+						img_titles.append(img_title[0])
 					
 					if self.save_img:
 						
@@ -104,23 +111,24 @@ class KYMScraper(Scraper):
 							try:
 								urllib.request.urlretrieve(img_url[0], os.path.join(dir_for_meme,str(meme_img_ctr) + ext))
 							except Exception as e:
-								# print(e)
 								continue
 
 			except Exception as e:
 				continue
 
+			text_string = ""
+			for i in range(len(meme_text)):
+				text_string += " ".join(meme_text[i].text.split()) + "\n"
+			text_string = text_string[:-1]
+			if self.clean_text:
+				text_string = clean_text(text_string)
+
 			if(self.output_format == "csv"):
-				text_string = ""
-				for i in range(len(meme_text)):
-					text_string += " ".join(meme_text[i].text.split()) + "\n"
-				text_string = text_string[:-1]
-				if self.clean_text:
-					text_string = clean_text(text_string)
-
-
-				file.write(template_name + "," + meme_page_url + "," + " ".join(img_urls))
+				file.write(template_name + "," + meme_page_url + "," + " ".join(img_titles) + "," + " ".join(img_urls))
 				file.write("\n")
+			elif(self.output_format == "json"):
+				meme_summary_list.append({"template_name": template_name, "template_url": meme_page_url, "text": text_string, "img_titles": deepcopy(img_titles), "img_urls": deepcopy(img_urls)})
+
 
 			# write the text to a text file
 			meme_file = open(os.path.join(dir_for_meme,'meme_data.txt'), "w")
@@ -133,7 +141,12 @@ class KYMScraper(Scraper):
 			meme_file.write("\n")
 			meme_file.close()
 
-		file.close()
+		if self.output_format == "csv":
+			file.close()
+		elif(self.output_format == "json"):
+			with open(os.path.join(self.save_dir_path,'data.json'),'w') as json_f:
+				json_f.dump(meme_summary_list,json_f)
+
 
 class RedditScraper(Scraper):
 	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True, clean_text=True):
