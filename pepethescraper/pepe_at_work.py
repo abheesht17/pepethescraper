@@ -169,10 +169,12 @@ class RedditScraper(Scraper):
 	def scrape(self, search_query, number_of_memes=100):
 
 		posts = []
+		json_posts = []
 		sub_reddit = self.reddit.subreddit(search_query)
 		for post in sub_reddit.hot(limit=number_of_memes):
 			try:
 				posts.append([post.title, post.score, post.id, post.subreddit, post.url, post.num_comments, post.selftext, post.created])
+				json_posts.append({"title": post.title, "score":post.score, "id":post.id,"subreddit":post.subreddit,"url":post.url,"num_comments":post.num_comments, "body":post.selftext,"created":post.created})
 			except:
 				continue
 		posts = pd.DataFrame(posts,columns=['title', 'score', 'id', 'subreddit', 'url', 'num_comments', 'body', 'created'])
