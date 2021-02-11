@@ -1,2 +1,2 @@
-from pepe_at_work import *
-from pepe_tools import *
+from pepethescraper.pepe_at_work import *
+from pepethescraper.pepe_tools import *
