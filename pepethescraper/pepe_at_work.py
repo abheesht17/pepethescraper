@@ -110,7 +110,7 @@ class KYMScraper(Scraper):
 						
 						if ext in self.allowed_image_extensions:
 							try:
-								urllib.request.urlretrieve(img_url[0], os.path.join(dir_for_meme,str(img_title)))
+								urllib.request.urlretrieve(img_url[0], os.path.join(dir_for_meme,str(img_title[0]) + ext))
 							except Exception as e:
 								continue
 
