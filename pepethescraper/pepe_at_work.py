@@ -153,7 +153,8 @@ class KYMScraper(Scraper):
 
 
 class RedditScraper(Scraper):
-	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True, clean_text=True):
+	def __init__(self, output_format="json", save_dir_path="memes", save_img=True, clean_text=True):
+		assert output_format in ["csv", "json", "none"], "output_format must be one of [\"csv\",\"json\",\"none\"]" 
 		self.output_format = output_format
 		self.save_dir_path = save_dir_path
 		self.save_img = save_img
@@ -181,6 +182,8 @@ class RedditScraper(Scraper):
 
 		if(self.output_format == "csv"):
 			posts.to_csv(os.path.join(self.save_dir_path,"data.csv"), index=False)
+		elif(self.output_format == "json"):
+			json_posts = posts.to_json(orient ='records')
 		print("Crawling " + str(number_of_memes) + " templates...")
 		for index, row in tqdm(posts.iterrows()):
 			
@@ -204,10 +207,17 @@ class RedditScraper(Scraper):
 				# extract comments
 				meme_file.write("COMMENTS\n")
 				submission.comments.replace_more(limit=0)
+				comments_to_write = ""
 				for top_level_comment in submission.comments.list():
 					text = " ".join(top_level_comment.body.split())
 					if self.clean_text:
 						text = clean_text(text)
-					meme_file.write(text)
-					meme_file.write("\n")
+					comments_to_write += text + "\n"
+				meme_file.write(comments_to_write)
+				json_posts[index]["comments"] = comments_to_write
+				
 			meme_file.close()
+
+		if(self.output_format == "json"):
+			with open(os.path.join(self.save_dir_path,'data.json'),'w') as json_f:
+				json.dump(json_posts,json_f)
