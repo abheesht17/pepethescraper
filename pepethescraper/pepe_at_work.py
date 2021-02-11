@@ -145,7 +145,7 @@ class KYMScraper(Scraper):
 			file.close()
 		elif(self.output_format == "json"):
 			with open(os.path.join(self.save_dir_path,'data.json'),'w') as json_f:
-				json_f.dump(meme_summary_list,json_f)
+				json.dump(meme_summary_list,json_f)
 
 
 class RedditScraper(Scraper):
