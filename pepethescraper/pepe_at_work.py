@@ -19,10 +19,13 @@ class Scraper:
 		pass
 
 class KYMScraper(Scraper):
-	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True):
+	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True, clean_text=True):
+		assert output_format in ["csv", "none"], "output_format must be one of [\"csv\",\"none\"]" 
+
 		self.output_format = output_format
 		self.save_dir_path = save_dir_path
 		self.save_img = save_img
+		self.clean_text = clean_text
 		self.allowed_image_extensions = ['.jpg', '.jpeg', '.png']
 
 	def scrape(self, search_query, number_of_memes=100):
@@ -110,6 +113,8 @@ class KYMScraper(Scraper):
 				for i in range(len(meme_text)):
 					text_string += " ".join(meme_text[i].text.split()) + "\n"
 				text_string = text_string[:-1]
+				if self.clean_text:
+					text_string = clean_text(text_string)
 
 
 				file.write(template_name + "," + meme_page_url + "," + " ".join(img_urls))
@@ -180,6 +185,9 @@ class RedditScraper(Scraper):
 				meme_file.write("COMMENTS\n")
 				submission.comments.replace_more(limit=0)
 				for top_level_comment in submission.comments.list():
-					meme_file.write(" ".join(top_level_comment.body.split()))
+					text = " ".join(top_level_comment.body.split())
+					if self.clean_text:
+						text = clean_text(text)
+					meme_file.write(text)
 					meme_file.write("\n")
 			meme_file.close()
