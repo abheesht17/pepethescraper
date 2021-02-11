@@ -1,6 +1,6 @@
 from cleantext import clean
 
-def clean_text(text):
+def clean_text_fn(text):
 	text = clean(text,
 				fix_unicode=True,				# fix various unicode errors
 				to_ascii=True,					# transliterate to closest ASCII representation
