@@ -134,10 +134,11 @@ class KYMScraper(Scraper):
 		file.close()
 
 class RedditScraper(Scraper):
-	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True):
+	def __init__(self, output_format="csv", save_dir_path="memes", save_img=True, clean_text=True):
 		self.output_format = output_format
 		self.save_dir_path = save_dir_path
 		self.save_img = save_img
+		self.clean_text = clean_text
 		self.allowed_image_extensions = ['.jpg', '.jpeg', '.png']
 
 		self.reddit = praw.Reddit(client_id = 'VFB_lJ3i5CTuaw', 
