@@ -22,7 +22,7 @@ pip install praw==7.1.4
 
 ```
 from pepethescraper.pepe_at_work import KYMScraper
-scraper = KYMScraper(save_dir_path="memes", save_img=False)
+scraper = KYMScraper(output_format="json", save_dir_path="kym_memes", save_img=True, clean_text=True)
 scraper.scrape(search_query="political memes",number_of_memes=5)
 ```
 
@@ -30,7 +30,7 @@ scraper.scrape(search_query="political memes",number_of_memes=5)
 
 ```
 from pepethescraper.pepe_at_work import RedditScraper
-scraper = RedditScraper(save_dir_path="memes", save_img=False)
+scraper = RedditScraper(output_format="json", save_dir_path="reddit_memes", save_img=True, clean_text=True)
 scraper.scrape(search_query="PoliticalMemes",number_of_memes=5)
 ```
 
