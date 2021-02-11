@@ -29,3 +29,15 @@ scraper.scrape(search_query="PoliticalMemes",number_of_memes=5)
 
 - Pepe's learning how to scrape memes off Twitter.
 - Pepe will also try to clean the text from KYM.
+
+### Pepe's Helpers
+
+- clean-text
+
+```
+pip install clean-text[gpl]==0.3.0
+```
+- praw
+```
+pip install praw==7.1.4
+```
