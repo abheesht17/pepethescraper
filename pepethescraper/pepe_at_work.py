@@ -174,7 +174,7 @@ class RedditScraper(Scraper):
 		for post in sub_reddit.hot(limit=number_of_memes):
 			try:
 				posts.append([post.title, post.score, post.id, post.subreddit, post.url, post.num_comments, post.selftext, post.created])
-				json_posts.append({"title": post.title, "score":post.score, "id":post.id,"subreddit":post.subreddit,"url":post.url,"num_comments":post.num_comments, "body":post.selftext,"created":post.created})
+				json_posts.append({"title": str(post.title), "score":str(post.score), "id":str(post.id),"subreddit":str(post.subreddit),"url":str(post.url),"num_comments":str(post.num_comments), "body":str(post.selftext),"created":str(post.created)})
 			except:
 				continue
 		posts = pd.DataFrame(posts,columns=['title', 'score', 'id', 'subreddit', 'url', 'num_comments', 'body', 'created'])
