@@ -7,6 +7,7 @@ from tqdm.auto import tqdm
 import re
 import praw
 import pandas as pd
+import json
 from copy import deepcopy
 
 from pepethescraper.pepe_tools import *
