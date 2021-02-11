@@ -184,9 +184,9 @@ class RedditScraper(Scraper):
 
 		if(self.output_format == "csv"):
 			posts.to_csv(os.path.join(self.save_dir_path,"data.csv"), index=False)
-		elif(self.output_format == "json"):
-			json_posts = posts.to_json(orient ='records',default_handler=str)
-		print("Crawling " + str(number_of_memes) + " templates...")
+
+
+		print("Crawling " + str(number_of_memes) + " memes...")
 		for index, row in tqdm(posts.iterrows()):
 			
 			url = row['url']
