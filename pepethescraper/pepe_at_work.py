@@ -35,7 +35,7 @@ class KYMScraper(Scraper):
 	def scrape(self, search_query, number_of_memes=100):
 		search_query = search_query.replace(" ","+")
 		pat_url = re.compile('<img [^>]*data-src="([^"]+)')
-		pat_title = re.compile('<img [^>]*data-src="([^"]+)')
+		pat_title = re.compile('<img [^>]*title="([^"]+)')
 
 		if not os.path.exists(self.save_dir_path):
 			os.makedirs(self.save_dir_path)
@@ -110,7 +110,7 @@ class KYMScraper(Scraper):
 						
 						if ext in self.allowed_image_extensions:
 							try:
-								urllib.request.urlretrieve(img_url[0], os.path.join(dir_for_meme,str(meme_img_ctr) + ext))
+								urllib.request.urlretrieve(img_url[0], os.path.join(dir_for_meme,str(img_title)))
 							except Exception as e:
 								continue
 
