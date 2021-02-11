@@ -7,6 +7,15 @@ Library for scraping memes off Know Your Meme and Reddit (along with the explana
   <img width="200" height="200" src="misc/images/pepe_the_frog.jpg">
 </p>
 
+### Setting Up Pepe The Scraper
+```
+git clone https://github.com/abheesht17/pepethescraper.git
+cd pepethescraper
+python setup.py install
+pip install clean-text[gpl]==0.3.0
+pip install praw==7.1.4
+```
+
 ### Examples:
 
 - Help Pepe scrape memes off KYM!
@@ -25,19 +34,12 @@ scraper = RedditScraper(save_dir_path="memes", save_img=False)
 scraper.scrape(search_query="PoliticalMemes",number_of_memes=5)
 ```
 
-### Upcoming Updates:
-
-- Pepe's learning how to scrape memes off Twitter.
-- Pepe will also try to clean the text from KYM.
-
 ### Pepe's Helpers
 
 - clean-text
-
-```
-pip install clean-text[gpl]==0.3.0
-```
 - praw
-```
-pip install praw==7.1.4
-```
+
+### Upcoming Updates:
+
+- Pepe's learning how to scrape memes off Twitter and ImgFlip.
+- Pepe will also try to clean the text from KYM.
