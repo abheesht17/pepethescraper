@@ -114,7 +114,7 @@ class KYMScraper(Scraper):
 					text_string += " ".join(meme_text[i].text.split()) + "\n"
 				text_string = text_string[:-1]
 				if self.clean_text:
-					text_string = clean_text(text_string)
+					text_string = clean_text_fn(text_string)
 
 
 				file.write(template_name + "," + meme_page_url + "," + " ".join(img_urls))
@@ -188,7 +188,7 @@ class RedditScraper(Scraper):
 				for top_level_comment in submission.comments.list():
 					text = " ".join(top_level_comment.body.split())
 					if self.clean_text:
-						text = clean_text(text)
+						text = clean_text_fn(text)
 					meme_file.write(text)
 					meme_file.write("\n")
 			meme_file.close()
