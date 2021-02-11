@@ -13,7 +13,7 @@ Library for scraping memes off Know Your Meme and Reddit (along with the explana
 
 ```
 from pepethescraper.pepe_at_work import KYMScraper
-scraper = KYMScraper(save_dir_path="memes", save_imgs=False)
+scraper = KYMScraper(save_dir_path="memes", save_img=False)
 scraper.scrape(search_query="political memes",number_of_memes=5)
 ```
 
@@ -21,7 +21,7 @@ scraper.scrape(search_query="political memes",number_of_memes=5)
 
 ```
 from pepethescraper.pepe_at_work import RedditScraper
-scraper = RedditScraper(save_dir_path="memes", save_imgs=False)
+scraper = RedditScraper(save_dir_path="memes", save_img=False)
 scraper.scrape(search_query="PoliticalMemes",number_of_memes=5)
 ```
 
