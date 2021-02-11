@@ -122,7 +122,7 @@ class KYMScraper(Scraper):
 
 			text_string = ""
 			for i in range(len(meme_text)):
-				text_string += " ".join(meme_text[i].text.split()) + "\n"
+				text_string += "- " + " ".join(meme_text[i].text.split()) + "\n"
 			text_string = text_string[:-1]
 			if self.clean_text:
 				text_string = clean_text(text_string)
@@ -214,7 +214,7 @@ class RedditScraper(Scraper):
 					text = " ".join(top_level_comment.body.split())
 					if self.clean_text:
 						text = clean_text(text)
-					comments_to_write += text + "\n"
+					comments_to_write += "- " + text + "\n"
 				meme_file.write(comments_to_write)
 				json_posts[index]["comments"] = comments_to_write
 				
